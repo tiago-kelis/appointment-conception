@@ -1,0 +1,95 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Usuario {
+  - id: Long
+  - nome: String
+  - email: String
+  - senha: String
+  - telefone: String
+  - roles: List<Role>
+  + criarUsuario()
+  + atualizarUsuario()
+}
+
+enum Role {
+  OPERADOR
+  ADMINISTRADOR
+}
+
+class Cliente {
+  - id: Long
+  - nome: String
+  - telefone: String
+  - dataNascimento: Date
+  + listarHistoricoConsultas()
+}
+
+class Profissional {
+  - id: Long
+  - nome: String
+  - telefone: String
+  - ativo: Boolean
+  - areas: List<Area>
+  - disponibilidade: Map<DiaSemana, List<Horario>>
+  + ativar()
+  + desativar()
+}
+
+class Area {
+  - id: Long
+  - nome: String
+}
+
+class Agendamento {
+  - id: Long
+  - cliente: Cliente
+  - profissional: Profissional
+  - area: Area
+  - tipoAtendimento: TipoAtendimento
+  - dataHoraInicio: DateTime
+  - comentarios: String
+  - status: StatusAgendamento
+  + agendar()
+  + cancelar()
+  + definirPresenca()
+}
+
+enum TipoAtendimento {
+  PARTICULAR
+  CONVENIO_1
+  CONVENIO_2
+}
+
+enum StatusAgendamento {
+  AGENDADO
+  CANCELADO
+  PRESENTE
+  AUSENTE
+}
+
+enum DiaSemana {
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+}
+
+class Horario {
+  - horaInicio: Time
+  - horaFim: Time
+}
+
+' Relacionamentos
+Usuario "1" -- "1" Role : tem
+Agendamento "1" -- "1" Cliente : possui
+Agendamento "1" -- "1" Profissional : possui
+Agendamento "1" -- "1" Area : pertence
+Agendamento "1" -- "1" TipoAtendimento : tem
+Agendamento "1" -- "1" StatusAgendamento : tem
+Profissional "1" -- "N" Area : atende
+Profissional "1" -- "N" Horario : disponível
+Profissional "1" -- "N" DiaSemana : trabalha
+
+@enduml
