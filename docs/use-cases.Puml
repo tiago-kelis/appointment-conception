@@ -1,95 +1,28 @@
-@startuml
-skinparam classAttributeIconSize 0
+@startuml "use_cases"
+left to right direction
 
-class Usuario {
-  - id: Long
-  - nome: String
-  - email: String
-  - senha: String
-  - telefone: String
-  - roles: List<Role>
-  + criarUsuario()
-  + atualizarUsuario()
+actor Operator as o
+actor Admin as a 
+
+package Appointment {
+    usecase "Create Appointment" as UC1
+    usecase "Cancel Appointment" as UC2
+    usecase "Confirm Appointment" as UC3
+    usecase "Define Professional Schedule" as UC4
+    usecase "Search Client History" as UC5
+    usecase "Search Professional Availability Days" as UC6
+    usecase "Search Professional Availability Times" as UC7
 }
 
-enum Role {
-  OPERADOR
-  ADMINISTRADOR
-}
+o <|-right- a
 
-class Cliente {
-  - id: Long
-  - nome: String
-  - telefone: String
-  - dataNascimento: Date
-  + listarHistoricoConsultas()
-}
+o --> UC1
+o --> UC2
+o --> UC3
+o --> UC5
+o --> UC6
+o --> UC7
+a --> UC4
+(UC1) ...> (UC7) : <<includes>>
 
-class Profissional {
-  - id: Long
-  - nome: String
-  - telefone: String
-  - ativo: Boolean
-  - areas: List<Area>
-  - disponibilidade: Map<DiaSemana, List<Horario>>
-  + ativar()
-  + desativar()
-}
-
-class Area {
-  - id: Long
-  - nome: String
-}
-
-class Agendamento {
-  - id: Long
-  - cliente: Cliente
-  - profissional: Profissional
-  - area: Area
-  - tipoAtendimento: TipoAtendimento
-  - dataHoraInicio: DateTime
-  - comentarios: String
-  - status: StatusAgendamento
-  + agendar()
-  + cancelar()
-  + definirPresenca()
-}
-
-enum TipoAtendimento {
-  PARTICULAR
-  CONVENIO_1
-  CONVENIO_2
-}
-
-enum StatusAgendamento {
-  AGENDADO
-  CANCELADO
-  PRESENTE
-  AUSENTE
-}
-
-enum DiaSemana {
-  SEGUNDA
-  TERCA
-  QUARTA
-  QUINTA
-  SEXTA
-}
-
-class Horario {
-  - horaInicio: Time
-  - horaFim: Time
-}
-
-' Relacionamentos
-Usuario "1" -- "1" Role : tem
-Agendamento "1" -- "1" Cliente : possui
-Agendamento "1" -- "1" Profissional : possui
-Agendamento "1" -- "1" Area : pertence
-Agendamento "1" -- "1" TipoAtendimento : tem
-Agendamento "1" -- "1" StatusAgendamento : tem
-Profissional "1" -- "N" Area : atende
-Profissional "1" -- "N" Horario : disponível
-Profissional "1" -- "N" DiaSemana : trabalha
-
-@enduml
+@enduml 
